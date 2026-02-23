@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from database import init_db, SessionLocal, Commit
 from datetime import datetime
 from fastapi.middleware.cors import CORSMiddleware
-
+from twitter_agent import get_recent_commits, generate_post, post_tweet
 
 load_dotenv()
 
@@ -86,3 +86,18 @@ def get_stored_commits():
         }
         for c in commits
     ]
+
+
+@app.get("/generate-post")
+def set_twitter_repo():
+    commits = get_recent_commits(1)
+    generated_post = generate_post(commits[0])
+    return generated_post
+
+
+@app.post("/post-tweet")
+def post_on_twitter(text: str):
+    tweet_posted = post_tweet(text)
+    if tweet_posted:
+        return {"status": "posted", "tweet": tweet_posted}
+    return {"status": "failed"}
