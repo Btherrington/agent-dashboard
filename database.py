@@ -16,5 +16,13 @@ class Commit(Base):
     date = Column(DateTime)
 
 
+class Tweet(Base):
+    __tablename__ = "tweets"
+    id = Column(String, primary_key=True)
+    handle = Column(String)
+    text = Column(String)
+    date = Column(DateTime)
+
+
 def init_db():
     Base.metadata.create_all(bind=engine)
